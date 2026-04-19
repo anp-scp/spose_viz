@@ -47,16 +47,24 @@ embeddings, names, labels = load_data()
 n_objects, n_dims = embeddings.shape
 
 
+# ── Dropbox client — refresh token never expires; SDK auto-renews access token ─
+@st.cache_resource(show_spinner=False)
+def _dropbox_client() -> dropbox.Dropbox:
+    cfg = st.secrets["dropbox"]
+    return dropbox.Dropbox(
+        oauth2_refresh_token=cfg["refresh_token"],
+        app_key=cfg["app_key"],
+        app_secret=cfg["app_secret"],
+    )
+
+
 # ── Dropbox image fetch ───────────────────────────────────────────────────────
-@st.cache_data(show_spinner="Fetching image…", ttl=600)
+@st.cache_data(show_spinner="Fetching image…", ttl=3600)
 def fetch_image(object_name: str) -> Image.Image | None:
     try:
-        print(object_name)
-        token = st.secrets["dropbox"]["access_token"]
         folder = st.secrets["dropbox"].get("folder_path", "")
-        dbx = dropbox.Dropbox(token)
         path = f"{folder}/{object_name}.jpg"
-        _, res = dbx.files_download(path)
+        _, res = _dropbox_client().files_download(path)
         return Image.open(io.BytesIO(res.content))
     except dropbox.exceptions.ApiError:
         return None
