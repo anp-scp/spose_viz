@@ -53,7 +53,7 @@ def fetch_image(object_name: str) -> Image.Image | None:
     try:
         print(object_name)
         token = st.secrets["dropbox"]["access_token"]
-        folder = st.secrets["dropbox"].get("folder_path", "").strip("/")
+        folder = st.secrets["dropbox"].get("folder_path", "")
         dbx = dropbox.Dropbox(token)
         path = f"{folder}/{object_name}.jpg"
         _, res = dbx.files_download(path)
