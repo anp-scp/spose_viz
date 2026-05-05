@@ -23,6 +23,12 @@ st.set_page_config(
 )
 st.title("SPoSE Embedding Explorer")
 
+st.markdown("This app visualizes the 66-dimensional SPoSE [[1]](#references) embedding of 1854 THINGS objects. The embeddings are learnt in such a way"
+" that each dimension corresponds to a human-interpretable 'concept' (e.g. 'red', 'round', 'animal'). In this app, you can explore the top "
+"activating concepts for an object and viusalize the embedding vector as heatmap.")
+
+st.divider()
+
 
 # ── Data loading ──────────────────────────────────────────────────────────────
 @st.cache_data(show_spinner="Loading embeddings…")
@@ -288,3 +294,8 @@ with tab3:
         margin=dict(l=200, r=20, t=60, b=160),
     )
     st.plotly_chart(fig3, use_container_width=True)
+
+st.divider()
+st.markdown("## References")
+
+st.write("[1] Hebart, Martin N., et al. \"Revealing the multidimensional mental representations of natural objects underlying human similarity judgements.\" Nature human behaviour 4.11 (2020): 1173-1185.")
